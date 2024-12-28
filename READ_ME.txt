@@ -1,12 +1,5 @@
-Module  :
-    1- Home  
-        Models 
-        1 - Receiver 
-        2 - TaxableTypes
-        3 - TaxSubtypes
-        4 - ReceiverFile
-        5 - ErrorLog 
-
+to use  
+pip install -r requirements.txt
 
 
 
