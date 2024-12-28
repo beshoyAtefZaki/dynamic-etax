@@ -3,9 +3,10 @@ from ereciept import models as tables
 from django.core.paginator import Page, Paginator
 
 Receiept = tables.ereciept.Receiept
-
+from ereciept.views import init_tax_sup_types , init_tax_types
 
 def home(request) :
+    
     receiepts = Receiept.objects.all().exclude(docstatus=-1)
     active_receiept = Receiept.objects.filter(docstatus=-1)
     if request.GET.get("search_fdate"):

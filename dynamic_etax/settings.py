@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'tax',
     'item',
     'reports',
+    #ereciept
+    'ereciept'
 
 ]
 

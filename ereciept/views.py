@@ -12,14 +12,18 @@ from ereciept.serializer import ReceieptSerializer, ReceieptWithoutUUIDSerialize
 
 from .models.TaxTypes import TaxTypes, TaxSubtypes
 import json
-
+from pathlib import Path
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 def init_tax_types():
-    f = open(
-        "/home/beshoy/taxauth/E-recirpt-app/receiptproject/ereciept/models/TaxSubtypes.json")
+
+
+
+    tax_subtype_path = BASE_DIR / r'dynamic_etax/TaxSubtypes.json'
+    f = open(tax_subtype_path, encoding= 'utf-8')
+    
     json_data = json.load(f)
     for i in json_data:
         a = TaxSubtypes(Code=i.get("Code"),
@@ -33,7 +37,9 @@ def init_tax_types():
     return True
 
 def init_tax_sup_types():
-    f = open("/home/beshoy/taxauth/E-recirpt-app/receiptproject/ereciept/models/taxtypes.json")
+   
+    tax_subtype_path = BASE_DIR / r'dynamic_etax/TaxTypes.json'
+    f = open(tax_subtype_path, encoding= 'utf-8')
     json_data = json.load(f)
     for i in json_data :
         a = TaxTypes(          Code = i.get("Code"),
