@@ -1,0 +1,232 @@
+{% extends 'base.html'%}
+{% load static %}
+{% block content %}
+
+	
+
+
+<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+
+
+<div class="container" >  
+    <div id="app"> 
+
+      
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal"
+       tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Data Uploaded </h5>
+                <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <h1>  [[ messgae ]] </h1>    
+                <div id="server_message"> </div>
+
+              </div>
+            
+            </div>
+        </div>
+    
+        <div>
+          <div class="row"> 
+            <div class="col-md-4" >
+              <input type="file"  ref="file" class="btn btn-success"  v-on:change="uploadFile" >
+            </div>
+            <div class="col-md-4" v-if='file' >
+              <label> Title</label>
+              <input type="text"    v-model="title"> 
+            </div>
+            <div class="col-md-4" >
+              <button v-on:click="submitFile()" v-if="title" 
+              class="btn btn-success" data-toggle="modal" data-target="#exampleModal" >Upload</button>
+            </div>
+          </div>
+        </div>
+        <hr> <br> <hr> 
+       
+        <table class="table table-bordered"  >
+          <thead  class="thead"> 
+            <tr>
+                <th class="col-xs-1" data-field="state" data-checkbox="true"></th>
+                <th class="col-xs-1"  >Inernal id</th>
+                <th class="col-xs-6"  >UID </th>
+                <th class="col-xs-6" > Status</th>
+                
+            </tr>
+
+
+
+        </thead>
+        <tbody>
+          <tr v-for ="item in accepted"> 
+            <td></td>
+            <td> [[ item.internalId ]] </td>
+            <td> [[ item.uuid ]] </td>
+            <td> "Submited" </td>
+          </tr>  
+
+          <tr v-for ="item in rejected"> 
+            <td> </td>
+            <td> [[ item.internalId ]] </td>
+            <td>  </td>
+            <td> "rejected" </td>
+          </tr>  
+        </tbody>
+
+        </table>
+ 
+    
+        <div class= 'footer' v-if='next_page'> 
+            <a v-if='previous' v-on:click="set_previous()">  Previous  </a>
+            <a v-on:click="set_next()">  Next  </a> </div>
+    </div>
+
+   
+</div>
+<script>
+     function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == " ") {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+  function GetActiveSessin() {
+    var data = getCookie("POS");
+    if (data == "open") {
+      var entry = getCookie("open_entry");
+      localStorage.setItem("open_entry", entry);
+      var profile = getCookie("pos_profile");
+      localStorage.setItem("current_profile", profile);
+    }
+  }
+  
+  
+  const vm = new Vue({
+    el: "#app",
+    delimiters: ["[[", "]]"], 
+    
+    data: {
+        location: `../main/invocie-list-api`,
+        items: [] ,
+        accepted : [] , 
+        rejected : [] ,
+        errors :[],
+        next_page :"",
+        previous :"" ,
+        file : null ,
+        showModal:false ,
+        title :null ,
+        messgae : null ,
+    } ,
+    beforeMount() {
+        console.log("mounted")
+  
+       
+    },
+    methods: {
+        
+        async  initItems() {
+        var invocies =  await fetch(this.location)
+        var response =  await invocies.json()
+
+        this.items = response.results
+        this.next_page = response.next
+        this.previous = response.previous
+        
+        },
+
+        set_next(){
+            this.location = this.next_page
+            this.initItems()
+        } ,
+        set_previous(){
+            this.location = this.previous
+            this.initItems()
+        } ,
+        uploadFile() {
+        this.file = this.$refs.file.files[0];
+       
+        
+      },
+      async post_to_auth(id){
+       
+        
+        var invocies =  await fetch(`../main/upload_vue/${id}`)
+        var response =  await invocies.json()
+        var i = 0
+        var data =[]//JSON.parse(response.documents )
+        console.log("data------------------------>",response.success)
+        if(response.success){
+        var res = response.success
+        this.accepted = res.Accepted
+        this.rejected = res.rejected
+        this.errors = res.Error
+       
+        // console.log("error" , this.errors)
+    
+       
+          if (this.errors ) {
+         
+          this.messgae = this.errors
+            }
+            if (res.submissionId)
+             {
+              
+              this.messgae =res.submissionId
+            } 
+      } 
+        else {
+          var a  = this.errors
+        }
+        
+   
+     
+   
+      },
+      submitFile() {
+        var head = this.title
+        this.title =null
+        const formData = new FormData();
+        formData.append('file', this.file);
+        formData.append("title" , head)
+        var csrftoken = getCookie("csrftoken");
+        var created_id = null 
+        const headers = { "X-CSRFToken": csrftoken };
+        var request = fetch(`../main/upload_from_vue` , {
+            method :"POST" ,
+            headers:headers ,
+            body: formData
+
+        }).then(response => response.json())
+        .then(data => {
+      
+          this.messgae = `Upload Sheet ${head}`
+          this.post_to_auth(data.id);
+          
+        })
+       
+        
+    },
+ 
+    }
+
+})
+
+</script>
+
+
+
+ {% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <form method= 'get'>
+  <div class="row">
+   <div class="col-md-4">
+    
+       <input type= 'text'  class ='form-control' name='q' value="{{ q }}">
+     
+    
+   </div>
+   <div class="col-md-4">
+    
+    
+   <button class="btn btn-success" type='submit'> F </button>
+ 
+</div>
+  </div>
+</form>
+</div>
+<div class="container" >
+
+  
+    <br> <hr> 
+    <dvi class="row">
+        <div class="col-md-12">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th class="text-center"> <strong>Code</strong> </th>
+                        <th class="text-center"> <strong>Desc EN</strong>  </th>
+                        <th class="text-center"> <strong >Desc AR </strong> </th>
+                         {% if tax.TaxtypeReference %}
+                        <th class="text-center">  <strong>Reference</strong></th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tax  in taxes %}
+                    <tr> 
+                        <td class="text-center">  {{tax.Code  }}  </td>
+                        <td class="text-center">  {{ tax.Desc_en  }} </td>
+                        <td class="text-center">  {{ tax.Desc_ar  }} </td>
+                        {% if tax.TaxtypeReference %}
+                        <td class="text-center">  {{ tax.TaxtypeReference  }} </td>
+                        {% endif %}
+                       
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </dvi>
+</div>
+
+{% endblock %}
