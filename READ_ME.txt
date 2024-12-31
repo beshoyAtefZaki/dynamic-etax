@@ -13,3 +13,10 @@ use python function  upload_vue
     use function  create_request to create invoice on the current database 
 
 
+usage 
+1 - Create env 
+2 - pip install -r windows_requirements.txt 
+3-  python manage.py makemigrations & migrate 
+4 - set Payer Account Data 
+5 - python manage.py migrate 
+6 - python run.py 
