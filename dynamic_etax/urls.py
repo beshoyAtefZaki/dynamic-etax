@@ -28,5 +28,5 @@ urlpatterns = [
     path('payer/ ', include('payer.urls')) ,
      path('taxes/ ', include('tax.urls')) ,
      path('main/' , include('invoice.urls')) ,
-
+    path('reports/' , include('reports.urls')),
 ]

@@ -671,6 +671,8 @@ def create_request(uploader_id , pth):
     """
     this function take file to read it in pandas 
     """
+
+    print("Stop here")
     data = pd.read_excel( pth  ,sheet_name = 0)
     dat_list = []
     dict_data = {}
@@ -740,10 +742,10 @@ def create_request(uploader_id , pth):
        r_str = str(r_str).replace("nan" , ' " " ')
        status = e_invoice_form(inv)
        invocies.append(status)
-    print(invocies)
+    
     message = []
     for e_invoice  in invocies :
        a =  post_to_auth_upload(e_invoice)
        message.append(a)
-    print(message)
+  
     return { "message" : message}

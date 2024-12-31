@@ -3,7 +3,7 @@
 import json 
 import hashlib
 from http.client import HTTPSConnection
-import OpenSSL
+# import OpenSSL
 from base64 import b64encode
 import base64
 import ssl

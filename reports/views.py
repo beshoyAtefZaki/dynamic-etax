@@ -11,9 +11,9 @@ from payer.utils import get_payer_account
 
 
 Acocunt = get_payer_account() 
-PAYER_ACCOUNT = Acocunt.get("Account")
-url     =  Acocunt.get("url")#'id.eta.gov.eg' if PAYER_ACCOUNT.environment == "Production" else 'id.preprod.eta.gov.eg'
-api_url       = Acocunt.get("api_url")       #'api.invoicing.eta.gov.eg' if PAYER_ACCOUNT.environment == "Production" else 'api.preprod.invoicing.eta.gov.eg'
+PAYER_ACCOUNT =  PayerAccount.objects.all().first()
+url     =      'id.eta.gov.eg' if PAYER_ACCOUNT.environment == "Production" else 'id.preprod.eta.gov.eg'
+api_url       = 'api.invoicing.eta.gov.eg' if PAYER_ACCOUNT.environment == "Production" else 'api.preprod.invoicing.eta.gov.eg'
 
 method= '/connect/token'
 
